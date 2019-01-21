@@ -1,6 +1,6 @@
-Объекты {
+﻿Объекты {
 	Vector {
-		Поля объекта {
+		Атрибуты объекта {
 			x: Number (0)
 			y: Number (0)
 			z: Number (0)
@@ -31,7 +31,7 @@
 		}
 	}
 	Object3D {
-		Поля объекта {
+		Атрибуты объекта {
 			position: Vector (0, 0, 0)
 			rotation: Vector (0, 0, 0)
 			scale: Vector (1, 1, 1) // Множитель размера
@@ -39,7 +39,7 @@
 		}
 	}
 	Camera {
-		Поля объекта {
+		Атрибуты объекта {
 			position: Vector (0, 0, -10)
 			rotation: Vector (0, 0, 0)
 			viewAngle: Number (90) // Угол обзора камеры
@@ -52,7 +52,7 @@
 
 Глобальные объекты {
 	properties {
-		Поля объекта {
+		Атрибуты объекта {
 			framerate: Number (60) // Частота вызова функции update
 		}
 	}
