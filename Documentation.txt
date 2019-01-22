@@ -19,7 +19,6 @@
 			Vector.distance(Vector, Vector) : Number // Возвращает расстояние между векторами
 			Vector.length(Vector) : Number // Возвращает длину вектора
 			Vector.angle(Vector, Vector) : Number [-Math.PI; +Math.PI] // Возвращает угол между векторами
-			Vector.cross(Vector, Vector) : Vector // Возвращает вектор, перпендикулярный сразу к двум векторам
 			Vector.normalize(Vector) : Vector // Возвращает вектор, направление которого совпадает с вектором аргумента, а длина равна 1
 			Vector.add(Vector, Vector) : Vector // Возвращает сумму векторов
 			Vector.substract(Vector, Vector) : Vector // Возвращает разницу векторов

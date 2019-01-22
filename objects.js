@@ -29,10 +29,6 @@ class Vector {
 	static angle(vector1, vector2) {
 		return Math.acos(Math.min(Math.max((vector1.x * vector2.x + vector1.y * vector2.y + vector1.z * vector2.z) / (Vector.length(vector1) * Vector.length(vector2)), -1), 1));
 	}
-	static cross(vector1, vector2) {
-		// using matrix
-		return new Vector(vector1.y * vector2.z - vector1.z * vector2.y, vector1.z * vector2.x - vector1.x * vector2.z, vector1.x * vector2.y - vector1.y * vector2.x);
-	}
 	static normalize(vector) { 
 		let scale = 1 / vector.length;
 		return new Vector(vector.x * scale, vector.y * scale, vector.z * scale);

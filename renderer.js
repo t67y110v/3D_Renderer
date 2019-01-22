@@ -3,8 +3,9 @@ var objects = [];
 function render(camera) {
 	screenSize = (new Vector(canvas.width, canvas.height)).length;
 	context.clearRect(0, 0, canvas.width, canvas.height);
-	let vertical = new Vector(0, 1, 0);
 	let horizontal = new Vector(1, 0, 0);
+	let vertical = new Vector(0, 1, 0);
+	let forward = new Vector(0, 0, 1);
 
 	let x = 0; let y = 1; let z = 2;
 	function rotate(vector, axis, angle) {
@@ -44,9 +45,11 @@ function render(camera) {
 	horizontal = rotate(horizontal, x, camera.rotation.x);
 	horizontal = rotate(horizontal, y, camera.rotation.y);
 	horizontal = rotate(horizontal, z, camera.rotation.z);
+	forward = rotate(forward, x, camera.rotation.x);
+	forward = rotate(forward, y, camera.rotation.y);
+	forward = rotate(forward, z, camera.rotation.z);
 
-	let viewVector = Vector.cross(horizontal, vertical).normalized;
-	for (let object = 0; object < objects.length; object++) {
+		for (let object = 0; object < objects.length; object++) {
 		let mesh = [];
 		for (let poly = 0; poly < objects[object].mesh.length; poly++) {
 			mesh.push([]);
@@ -65,10 +68,10 @@ function render(camera) {
 									mesh[poly][i].y * objects[object].scale.y + objects[object].position.y, 
 									mesh[poly][i].z * objects[object].scale.z + objects[object].position.z); // vertex pos in space
 				let vertex2cam = new Vector(vertex.x - camera.position.x, vertex.y - camera.position.y, vertex.z - camera.position.z); // vertex pos in camera space
-				let angle = Vector.angle(vertex2cam, viewVector); // angle btw camera's view vector and vector from camera to vertex pos
-				let cam2plane = new Vector(viewVector.x * Math.cos(angle) * vertex2cam.length, 
-										   viewVector.y * Math.cos(angle) * vertex2cam.length, 
-										   viewVector.z * Math.cos(angle) * vertex2cam.length); // vector from camera to plane's origin
+				let angle = Vector.angle(vertex2cam, forward); // angle btw camera's view vector and vector from camera to vertex pos
+				let cam2plane = new Vector(forward.x * Math.cos(angle) * vertex2cam.length, 
+										   forward.y * Math.cos(angle) * vertex2cam.length, 
+										   forward.z * Math.cos(angle) * vertex2cam.length); // vector from camera to plane's origin
 				let vertex2plane = new Vector(vertex2cam.x - cam2plane.x, 
 											  vertex2cam.y - cam2plane.y,
 											  vertex2cam.z - cam2plane.z); // vector from plane's origin to vertex
