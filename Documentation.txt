@@ -55,6 +55,11 @@
 			framerate: Number (60) // Частота вызова функции update
 		}
 	}
+	context {
+		Функции {
+			point(x, y) // Закрашивает пиксель с цветом context.strokeStyle
+		}
+	}
 }
 
 Глобальные функции {
