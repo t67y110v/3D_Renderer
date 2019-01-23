@@ -6,27 +6,32 @@
 			z: Number (0)
 			[get] length: Number // Содержит длину вектора
 			[get] normalized: Vector // Содержит вектор, направление которого совпадает с вектором объекта, а длина равна 1
+			[get] copy: Vector // Возвращает копию вектора объекта
 		}
 
 		Функции объекта {
-			move(Vector) : void // Передвигает вектор объекта на вектор
-			distance(Vector) : Number // Возвращает расстояние между вектором объекта и аргументом
-			angle(Vector) : Number [0; +Math.PI] // Возвращает угол между вектором объекта и аргументом
-			cross(Vector) : Vector // Возвращает вектор, перпендикулярный к вектору объекта и аргументу
+			move(: Vector) : void // Передвигает вектор объекта на вектор
+			distance(: Vector) : Number // Возвращает расстояние между вектором объекта и аргументом
+			angle(: Vector) : Number [0; +Math.PI] // Возвращает угол между вектором объекта и аргументом
+			cross(: Vector) : Vector // Возвращает вектор, перпендикулярный к вектору объекта и аргументу
 		}
 
 		Статичные функции {
-			Vector.distance(Vector, Vector) : Number // Возвращает расстояние между векторами
-			Vector.length(Vector) : Number // Возвращает длину вектора
-			Vector.angle(Vector, Vector) : Number [-Math.PI; +Math.PI] // Возвращает угол между векторами
-			Vector.normalize(Vector) : Vector // Возвращает вектор, направление которого совпадает с вектором аргумента, а длина равна 1
-			Vector.add(Vector, Vector) : Vector // Возвращает сумму векторов
-			Vector.substract(Vector, Vector) : Vector // Возвращает разницу векторов
+			Vector.distance(vector1: Vector, vector2: Vector) : Number // Возвращает расстояние между векторами
+			Vector.length(vector: Vector) : Number // Возвращает длину вектора
+			Vector.angle(vector1: Vector, vector2: Vector) : Number [-Math.PI; +Math.PI] // Возвращает угол между векторами
+			Vector.normalize(vector: Vector) : Vector // Возвращает вектор, направление которого совпадает с вектором аргумента, а длина равна 1
+			Vector.add(vector1: Vector, vector2: Vector) : Vector // Возвращает vector1 + vector2
+			Vector.substract(vector1: Vector, vector2: Vector) : Vector // Возвращает vector1 - vector2
 		}
 	}
 	Mesh {
 		Статичные поля {
 			Mesh.cube: Array // Полигональная фигура куба
+			Mesh.cat: Array // Лоу-поли модель кота
+		}
+		Статичные функции {
+			loadObject(path: Str) : Array // Возвращает модель, взятую из файла .obj
 		}
 	}
 	Object3D {
@@ -44,7 +49,7 @@
 			viewAngle: Number (90) // Угол обзора камеры
 		}
 		Функции объекта {
-			look(Vector) : void // Поворачивает камеру по вектору
+			look(direction: Vector) : void // Поворачивает камеру по вектору
 		}
 	}
 }
@@ -57,13 +62,14 @@
 	}
 	context {
 		Функции {
-			point(x, y) // Закрашивает пиксель с цветом context.strokeStyle
+			point(x: Number, y: Number) // Закрашивает пиксель с цветом context.strokeStyle
 		}
 	}
 }
 
 Глобальные функции {
-	render(Camera) : void // Выводит изображение с камеры на экран
+	render(camera: Camera) : void // Выводит изображение с камеры на экран
+	loadFile(path: Str) : Str // Возвращает содержание текстового файла. 
 }
 
 Пользовательские функции {

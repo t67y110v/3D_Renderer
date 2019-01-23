@@ -60,13 +60,14 @@ function render(camera) {
 			let points = [];
 			let inView = 0;
 			for (let i = 0; i < 3; i++) {
+				mesh[poly][i] = Vector.substract(mesh[poly][i], objects[object].center);
 				mesh[poly][i] = rotate(mesh[poly][i], x, objects[object].rotation.x);
 				mesh[poly][i] = rotate(mesh[poly][i], y, objects[object].rotation.y);
 				mesh[poly][i] = rotate(mesh[poly][i], z, objects[object].rotation.z);
 
 				let vertex = new Vector(mesh[poly][i].x * objects[object].scale.x + objects[object].position.x, 
-									mesh[poly][i].y * objects[object].scale.y + objects[object].position.y, 
-									mesh[poly][i].z * objects[object].scale.z + objects[object].position.z); // vertex pos in space
+										mesh[poly][i].y * objects[object].scale.y + objects[object].position.y, 
+										mesh[poly][i].z * objects[object].scale.z + objects[object].position.z); // vertex pos in space
 				let vertex2cam = new Vector(vertex.x - camera.position.x, vertex.y - camera.position.y, vertex.z - camera.position.z); // vertex pos in camera space
 				let angle = Vector.angle(vertex2cam, forward); // angle btw camera's view vector and vector from camera to vertex pos
 				let cam2plane = new Vector(forward.x * Math.cos(angle) * vertex2cam.length, 

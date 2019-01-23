@@ -56,78 +56,56 @@ class Vector {
 	get normalized() {
 		return Vector.normalize(this);
 	}
+	get copy() {
+		return new Vector(this.x, this.y, this.z);
+	}
 }
 
 class Mesh {
+	static loadObject(path) {
+		let file = loadFile(path);
+		let data = file.split("\n");
+
+		let vertices = [];
+
+		let mesh = [];
+		for (let i = 0; i < data.length; i++) {
+			while (/.+\s+$/.test(data[i]))
+				data[i] = data[i].slice(0, -1);
+			let line = data[i].split(/\s+/);
+			if (line[0] == "v") {
+				if (line.length != 4) {
+					alert("Invalid .obj file: vertices loading failed");
+					return undefined;
+				}
+				vertices.push(new Vector(Number(line[1]), Number(line[2]), Number(line[3])));
+			}
+			else if (line[0] == "f") {
+				if (line.length == 4) {
+					mesh.push([vertices[Number(line[1].split('/')[0]) - 1], 
+						   vertices[Number(line[2].split('/')[0]) - 1], 
+						   vertices[Number(line[3].split('/')[0]) - 1]]);
+				} else if (line.length == 5) {
+					mesh.push([vertices[Number(line[1].split('/')[0]) - 1], 
+							   vertices[Number(line[2].split('/')[0]) - 1], 
+							   vertices[Number(line[3].split('/')[0]) - 1]]);
+					mesh.push([vertices[Number(line[2].split('/')[0]) - 1], 
+							   vertices[Number(line[3].split('/')[0]) - 1], 
+							   vertices[Number(line[4].split('/')[0]) - 1]]);
+				} else {
+					alert("Invalid .obj file: vertices loading failed");
+					return undefined;
+				}
+			}
+		}
+		return mesh;
+	}
+
 	static get cube() {
-		return [
-			// bottom
-			[
-				new Vector(-0.5, -0.5, -0.5),
-				new Vector(-0.5, -0.5, 0.5),
-				new Vector(0.5, -0.5, -0.5)
-			],
-			[
-				new Vector(0.5, -0.5, 0.5),
-				new Vector(-0.5, -0.5, 0.5),
-				new Vector(0.5, -0.5, -0.5)
-			],
-			// top
-			[
-				new Vector(0.5, 0.5, 0.5),
-				new Vector(-0.5, 0.5, 0.5),
-				new Vector(0.5, 0.5, -0.5)
-			],
-			[
-				new Vector(0.5, 0.5, 0.5),
-				new Vector(-0.5, 0.5, 0.5),
-				new Vector(0.5, 0.5, -0.5)
-			],
-			// left
-			[
-				new Vector(-0.5, -0.5, -0.5),
-				new Vector(-0.5, -0.5, 0.5),
-				new Vector(-0.5, 0.5, -0.5)
-			],
-			[
-				new Vector(-0.5, 0.5, 0.5),
-				new Vector(-0.5, -0.5, 0.5),
-				new Vector(-0.5, 0.5, -0.5)
-			],
-			// right
-			[
-				new Vector(0.5, -0.5, -0.5),
-				new Vector(0.5, -0.5, 0.5),
-				new Vector(0.5, 0.5, -0.5)
-			],
-			[
-				new Vector(0.5, 0.5, 0.5),
-				new Vector(0.5, -0.5, 0.5),
-				new Vector(0.5, 0.5, -0.5)
-			],
-			// back
-			[
-				new Vector(-0.5, -0.5, -0.5),
-				new Vector(0.5, -0.5, -0.5),
-				new Vector(-0.5, 0.5, -0.5)
-			],
-			[
-				new Vector(0.5, 0.5, -0.5),
-				new Vector(0.5, -0.5, -0.5),
-				new Vector(-0.5, 0.5, -0.5)
-			],
-			// forward
-			[
-				new Vector(-0.5, -0.5, 0.5),
-				new Vector(0.5, -0.5, 0.5),
-				new Vector(-0.5, 0.5, 0.5)
-			],
-			[
-				new Vector(0.5, 0.5, 0.5),
-				new Vector(0.5, -0.5, 0.5),
-				new Vector(-0.5, 0.5, 0.5)
-			]
-		];
+		return Mesh.loadObject("obj/cube.obj");
+	}
+	static get cat() {
+		return Mesh.loadObject("obj/cat.obj");
 	}
 }
 
@@ -136,8 +114,41 @@ class Object3D {
 		this.position = new Vector();
 		this.rotation = new Vector();
 		this.scale = new Vector(1, 1, 1);
-		this.mesh = Mesh.cube;	
+		this._mesh = Mesh.cube;	
+		this.center = new Vector();
+		this.recalculateCenter()
 		objects.push(this);
+	}
+
+	recalculateCenter() {
+		let max = this._mesh[0][0].copy;
+		let min = this._mesh[0][0].copy;
+		for (let i = 0; i < this._mesh.length; i++) {
+			for (let j = 0; j < this._mesh[i].length; j++) {
+				if (this._mesh[i][j].x > max.x)
+					max.x = this._mesh[i][j].x;
+				if (this._mesh[i][j].y > max.y)
+					max.y = this._mesh[i][j].y;
+				if (this._mesh[i][j].z > max.z)
+					max.z = this._mesh[i][j].z;
+
+				if (this._mesh[i][j].x < min.x)
+					min.x = this._mesh[i][j].x;
+				if (this._mesh[i][j].y < min.y)
+					min.y = this._mesh[i][j].y;
+				if (this._mesh[i][j].z < min.z)
+					min.z = this._mesh[i][j].z;
+			}
+		}
+		this.center = new Vector((max.x + min.x) / 2, (max.y + min.y) / 2, (max.z + min.z) / 2);
+	}
+	
+	set mesh(value) {
+		this._mesh = value;
+		this.recalculateCenter();
+	}
+	get mesh() {
+		return this._mesh;
 	}
 }
 
