@@ -14,3 +14,4 @@ function update() {
 	angle += Math.PI / 180;
 	render(camera);
 }
+// wqeqwe aeqeqeda dqwadas
