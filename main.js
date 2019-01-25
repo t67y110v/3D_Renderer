@@ -1,20 +1,16 @@
-function generate_grid(width, height, bleed_x, bleed_y, cell_size, variance, rand_fn) {
-  var w = width + bleed_x;
-  var h = height + bleed_y;
-  var half_cell_size = cell_size * 0.5;
-  var double_v = variance * 2;
-  var negative_v = -variance;
 
-  var points = [];
-  for (var i = -bleed_x; i < w; i += cell_size) {
-    for (var j = -bleed_y; j < h; j += cell_size) {
-      var x = (i + half_cell_size) + (rand_fn() * double_v + negative_v);
-      var y = (j + half_cell_size) + (rand_fn() * double_v + negative_v);
-      points.push([Math.floor(x), Math.floor(y)]);
-    }
-  }
+let camera = new Camera();
+let cat = new Object3D();
+cat.mesh = Mesh.cat;
+cat.scale.multiply(0.01);
 
-  return points;
+
+let angle = 0;
+function update() {
+	camera.position = new Vector(Math.sin(angle * speed) * amp, Math.cos(angle * speed * 1.7) * 2 + 0.5, Math.cos(angle * speed) * amp);
+	camera.look(Vector.substract(cat.position, camera.position));
+
+	angle += Math.PI / 180;
+	render(camera);
 }
 
-module.exports = generate_grid;

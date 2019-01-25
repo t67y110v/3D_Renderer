@@ -29,9 +29,12 @@ class Vector {
 	static angle(vector1, vector2) {
 		return Math.acos(Math.min(Math.max((vector1.x * vector2.x + vector1.y * vector2.y + vector1.z * vector2.z) / (Vector.length(vector1) * Vector.length(vector2)), -1), 1));
 	}
+	static multiply(vector, factor) {
+		return new Vector(vector.x * factor, vector.y * factor, vector.z * factor);
+	}
 	static normalize(vector) { 
 		let scale = 1 / vector.length;
-		return new Vector(vector.x * scale, vector.y * scale, vector.z * scale);
+		return Vector.multiply(vector, scale);
 	}
 	static add(vector1, vector2) {
 		return new Vector(vector1.x + vector2.x, vector1.y + vector2.y, vector1.z + vector2.z);
@@ -49,6 +52,11 @@ class Vector {
 	cross(vector2) {
 		return Vector.cross(this, vector2);
 	}
+	multiply(factor) {
+		this.x *= factor;
+		this.y *= factor;
+		this.z *= factor;
+	}
 
 	get length() {
 		return Vector.length(this);
@@ -62,6 +70,17 @@ class Vector {
 }
 
 class Mesh {
+	constructor(polygons, normals) {
+		if (polygons && normals) {
+			this.polygons = polygons;
+			this.normals = normals;
+		}
+		else {
+			this.polygons = [];
+			this.normals = [];
+		}
+	}
+
 	static loadObject(path) {
 		let file = loadFile(path);
 		let data = file.split("\n");
@@ -69,6 +88,8 @@ class Mesh {
 		let vertices = [];
 
 		let mesh = [];
+		let min = new Vector();
+		let max = new Vector();
 		for (let i = 0; i < data.length; i++) {
 			while (/.+\s+$/.test(data[i]))
 				data[i] = data[i].slice(0, -1);
@@ -83,8 +104,8 @@ class Mesh {
 			else if (line[0] == "f") {
 				if (line.length == 4) {
 					mesh.push([vertices[Number(line[1].split('/')[0]) - 1], 
-						   vertices[Number(line[2].split('/')[0]) - 1], 
-						   vertices[Number(line[3].split('/')[0]) - 1]]);
+							   vertices[Number(line[2].split('/')[0]) - 1], 
+							   vertices[Number(line[3].split('/')[0]) - 1]]);
 				} else if (line.length == 5) {
 					mesh.push([vertices[Number(line[1].split('/')[0]) - 1], 
 							   vertices[Number(line[2].split('/')[0]) - 1], 
@@ -98,7 +119,7 @@ class Mesh {
 				}
 			}
 		}
-		return mesh;
+		return new Mesh(mesh, []);
 	}
 
 	static get cube() {
@@ -121,23 +142,23 @@ class Object3D {
 	}
 
 	recalculateCenter() {
-		let max = this._mesh[0][0].copy;
-		let min = this._mesh[0][0].copy;
-		for (let i = 0; i < this._mesh.length; i++) {
-			for (let j = 0; j < this._mesh[i].length; j++) {
-				if (this._mesh[i][j].x > max.x)
-					max.x = this._mesh[i][j].x;
-				if (this._mesh[i][j].y > max.y)
-					max.y = this._mesh[i][j].y;
-				if (this._mesh[i][j].z > max.z)
-					max.z = this._mesh[i][j].z;
+		let max = this._mesh.polygons[0][0].copy;
+		let min = this._mesh.polygons[0][0].copy;
+		for (let i = 0; i < this._mesh.polygons.length; i++) {
+			for (let j = 0; j < this._mesh.polygons[i].length; j++) {
+				if (this._mesh.polygons[i][j].x > max.x)
+					max.x = this._mesh.polygons[i][j].x;
+				if (this._mesh.polygons[i][j].y > max.y)
+					max.y = this._mesh.polygons[i][j].y;
+				if (this._mesh.polygons[i][j].z > max.z)
+					max.z = this._mesh.polygons[i][j].z;
 
-				if (this._mesh[i][j].x < min.x)
-					min.x = this._mesh[i][j].x;
-				if (this._mesh[i][j].y < min.y)
-					min.y = this._mesh[i][j].y;
-				if (this._mesh[i][j].z < min.z)
-					min.z = this._mesh[i][j].z;
+				if (this._mesh.polygons[i][j].x < min.x)
+					min.x = this._mesh.polygons[i][j].x;
+				if (this._mesh.polygons[i][j].y < min.y)
+					min.y = this._mesh.polygons[i][j].y;
+				if (this._mesh.polygons[i][j].z < min.z)
+					min.z = this._mesh.polygons[i][j].z;
 			}
 		}
 		this.center = new Vector((max.x + min.x) / 2, (max.y + min.y) / 2, (max.z + min.z) / 2);
