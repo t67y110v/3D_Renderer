@@ -8,9 +8,9 @@
 			[get] normalized: Vector // Содержит вектор, направление которого совпадает с вектором объекта, а длина равна 1
 			[get] copy: Vector // Возвращает копию вектора объекта
 		}
-
 		Функции объекта {
 			move(: Vector) : void // Передвигает вектор объекта на вектор
+			multiply(factor: Number) : void // Умножает каждый компонент вектора на число.
 			distance(: Vector) : Number // Возвращает расстояние между вектором объекта и аргументом
 			angle(: Vector) : Number [0; +Math.PI] // Возвращает угол между вектором объекта и аргументом
 			cross(: Vector) : Vector // Возвращает вектор, перпендикулярный к вектору объекта и аргументу
@@ -23,15 +23,21 @@
 			Vector.normalize(vector: Vector) : Vector // Возвращает вектор, направление которого совпадает с вектором аргумента, а длина равна 1
 			Vector.add(vector1: Vector, vector2: Vector) : Vector // Возвращает vector1 + vector2
 			Vector.substract(vector1: Vector, vector2: Vector) : Vector // Возвращает vector1 - vector2
+			Vector.multiply(vector: Vector, factor: Number) : Vector // Возвращает вектор, полученный в результате перемножения каждого компонента вектора на число
 		}
 	}
 	Mesh {
+		Атрибуты объекта {
+			polygons: Array // массив полигонов. Каждый полигон является массивом векторов длиной 3
+			normals: Array // нормали для каждого полигона
+		}
+
 		Статичные поля {
-			Mesh.cube: Array // Полигональная фигура куба
-			Mesh.cat: Array // Лоу-поли модель кота
+			Mesh.cube: Mesh // Полигональная фигура куба
+			Mesh.cat: Mesh // Лоу-поли модель кота
 		}
 		Статичные функции {
-			loadObject(path: Str) : Array // Возвращает модель, взятую из файла .obj
+			loadObject(path: Str) : Mesh // Возвращает модель, взятую из файла .obj
 		}
 	}
 	Object3D {

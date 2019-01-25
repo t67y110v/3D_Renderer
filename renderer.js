@@ -49,25 +49,25 @@ function render(camera) {
 	forward = rotate(forward, y, camera.rotation.y);
 	forward = rotate(forward, z, camera.rotation.z);
 
-		for (let object = 0; object < objects.length; object++) {
-		let mesh = [];
-		for (let poly = 0; poly < objects[object].mesh.length; poly++) {
-			mesh.push([]);
+	for (let object = 0; object < objects.length; object++) {
+		let polygons = [];
+		for (let poly = 0; poly < objects[object].mesh.polygons.length; poly++) {
+			polygons.push([]);
 			for (let i = 0; i < 3; i++)
-				mesh[poly].push(Object.assign({}, objects[object].mesh[poly][i]));
+				polygons[poly].push(Object.assign({}, objects[object].mesh.polygons[poly][i]));
 		}
-		for (let poly = 0; poly < mesh.length; poly++) {
+		for (let poly = 0; poly < polygons.length; poly++) {
 			let points = [];
 			let inView = 0;
 			for (let i = 0; i < 3; i++) {
-				mesh[poly][i] = Vector.substract(mesh[poly][i], objects[object].center);
-				mesh[poly][i] = rotate(mesh[poly][i], x, objects[object].rotation.x);
-				mesh[poly][i] = rotate(mesh[poly][i], y, objects[object].rotation.y);
-				mesh[poly][i] = rotate(mesh[poly][i], z, objects[object].rotation.z);
+				polygons[poly][i] = Vector.substract(polygons[poly][i], objects[object].center);
+				polygons[poly][i] = rotate(polygons[poly][i], x, objects[object].rotation.x);
+				polygons[poly][i] = rotate(polygons[poly][i], y, objects[object].rotation.y);
+				polygons[poly][i] = rotate(polygons[poly][i], z, objects[object].rotation.z);
 
-				let vertex = new Vector(mesh[poly][i].x * objects[object].scale.x + objects[object].position.x, 
-										mesh[poly][i].y * objects[object].scale.y + objects[object].position.y, 
-										mesh[poly][i].z * objects[object].scale.z + objects[object].position.z); // vertex pos in space
+				let vertex = new Vector(polygons[poly][i].x * objects[object].scale.x + objects[object].position.x, 
+										polygons[poly][i].y * objects[object].scale.y + objects[object].position.y, 
+										polygons[poly][i].z * objects[object].scale.z + objects[object].position.z); // vertex pos in space
 				let vertex2cam = new Vector(vertex.x - camera.position.x, vertex.y - camera.position.y, vertex.z - camera.position.z); // vertex pos in camera space
 				let angle = Vector.angle(vertex2cam, forward); // angle btw camera's view vector and vector from camera to vertex pos
 				let cam2plane = new Vector(forward.x * Math.cos(angle) * vertex2cam.length, 
