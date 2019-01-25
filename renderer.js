@@ -1,5 +1,3 @@
-var objects = [];
-
 function render(camera) {
 	screenSize = (new Vector(canvas.width, canvas.height)).length;
 	context.clearRect(0, 0, canvas.width, canvas.height);
@@ -101,8 +99,46 @@ function render(camera) {
 	}
 
 }
-function triangle(pose1,pose2,pose3){
-	console.log(pose1.x)
-	console.log(pose2.y)
-	console.log(pose3.x)
+function triangle(p1, p2, p3){
+	function triangle_top() {
+		context.strokeStyle = "#000000";
+		let k1 = (p1.y - p2.y)/ (p1.x - p2.x);
+		let k2 = (p2.y - p3.y ) / ( p2.x - p3.x);
+		m1 = p1.y - k1* p1.x;
+		m2 = p2.y - k2* p2.x ;
+		for (let x = 0; x < getWindowSize().width; x++) {
+			let y1 = x * k1+m1;
+			let y2 = x*k2+m2;
+			for ( let y = 0 ; y < getWindowSize().height; y ++){
+				if ( k1 > 0 && k2 < 0){
+					if (y < y1 && y < y2){
+						if (y > p1.y && y > p3.y)
+							context.point(x,y)
+					}
+				}
+				else if (k1 >0 && k2 > 0){
+					if (y < y1 && y > y2){
+						if (y > p1.y && y > p3.y)
+							context.point(x,y)
+					}
+				}
+				else if (k1 <0 && k2 < 0){
+					if (y > y1 && y < y2){
+						if (y > p1.y && y > p3.y)
+							context.point(x,y)
+					}
+				}
+			}
+		}
+	}
+	function triangle_bottom() {
+		console.log("drawing bottom");
+	}
+
+	if ( p1.y == p3.y && p1.y < p2.y)
+		triangle_top();
+	else 
+		triangle_bottom();
 }
+
+triangle((new Vector(100, 300)), new Vector(200, 500), new Vector(300, 300));
