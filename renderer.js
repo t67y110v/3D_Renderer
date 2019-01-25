@@ -99,4 +99,10 @@ function render(camera) {
 			}
 		}
 	}
+
+}
+function triangle(pose1,pose2,pose3){
+	console.log(pose1.x)
+	console.log(pose2.y)
+	console.log(pose3.x)
 }

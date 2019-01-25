@@ -2,16 +2,18 @@ let camera = new Camera();
 let cat = new Object3D();
 cat.mesh = Mesh.cat;
 cat.scale = new Vector(0.01, 0.01, 0.01);
+function generate_grid(width, height, bleed_x, bleed_y, cell_size, variance, rand_fn) {
 
-let amp = 10;
-let speed = 1;
+  var points = [];
+  for (var i = -bleed_x; i < w; i += cell_size) {
+    for (var j = -bleed_y; j < h; j += cell_size) {
+      var x = (i + half_cell_size) + (rand_fn() * double_v + negative_v);
+      var y = (j + half_cell_size) + (rand_fn() * double_v + negative_v);
+      points.push([Math.floor(x), Math.floor(y)]);
+    }
+  }
 
-let angle = 0;
-function update() {
-	camera.position = new Vector(Math.sin(angle * speed) * amp, 0, Math.cos(angle * speed) * amp);
-	camera.look(Vector.substract(cat.position, camera.position));
-
-	angle += Math.PI / 180;
-	render(camera);
+  return points;
 }
-// wqeqwe aeqeqeda dqwadas
+
+module.exports = generate_grid;
