@@ -1,8 +1,9 @@
-let camera = new Camera();
-let cat = new Object3D();
-cat.mesh = Mesh.cat;
-cat.scale = new Vector(0.01, 0.01, 0.01);
 function generate_grid(width, height, bleed_x, bleed_y, cell_size, variance, rand_fn) {
+  var w = width + bleed_x;
+  var h = height + bleed_y;
+  var half_cell_size = cell_size * 0.5;
+  var double_v = variance * 2;
+  var negative_v = -variance;
 
   var points = [];
   for (var i = -bleed_x; i < w; i += cell_size) {
